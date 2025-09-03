@@ -2,17 +2,36 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, RegisterSchema } from "../../schemas/register.schema";
 import { ToastContainer, toast } from "react-toastify";
+import { useEffect, useState } from "react";
 const Register = () => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: { level: 0 },
   });
+
+  // Trả về giá trị hiện tại của field avatar
+  // Vì schema là FileList nên cần ép kiểu sang FileList hoặc undefined
+  const avatarList = watch("avatar") as FileList | undefined;
+  // Tạo url cho ảnh
+  // Chạy lại useEffect mỗi khi người dùng chọn file mới
+  useEffect(() => {
+    const file = avatarList?.[0];
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [avatarList]);
+
   const obSubmit = (data: RegisterSchema) => {
-    console.log(data);
     toast("Sign up successful");
   };
 
@@ -69,7 +88,11 @@ const Register = () => {
 
             {/* Nút chọn file */}
 
-            <input {...register("avatar")} type="file" />
+            <input
+              {...register("avatar")}
+              type="file"
+              accept="image/jpeg, image/png"
+            />
             {errors.avatar?.message && (
               <p style={{ color: "red", fontSize: "13px" }}>
                 {errors.avatar.message}
@@ -90,7 +113,13 @@ const Register = () => {
                 fontSize: 14,
                 background: "#fafafa",
               }}
-            ></div>
+            >
+              {previewUrl ? (
+                <img src={previewUrl} style={{ height: "100%" }} />
+              ) : (
+                "No image"
+              )}
+            </div>
           </div>
           <div
             style={{
