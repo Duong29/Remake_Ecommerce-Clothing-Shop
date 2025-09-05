@@ -1,8 +1,8 @@
-import footer1Img from '@/assets/images/img-footer1.png'
-import footer2Img from '@/assets/images/img-footer2.png'
-import footer3Img from '@/assets/images/img-footer3.png'
-import footer4Img from '@/assets/images/img-footer4.png'
-import map from '@/assets/images/map.png'
+import footer1Img from '../assets/images/img-footer1.png'
+import footer2Img from '../assets/images/img-footer2.png'
+import footer3Img from '../assets/images/img-footer3.png'
+import footer4Img from '../assets/images/img-footer4.png'
+import map from '../assets/images/map.png'
 
 const Footer = () => {
   return (

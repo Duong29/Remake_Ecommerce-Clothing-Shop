@@ -1,6 +1,6 @@
-import girl1 from '@/assets/images/girl1.jpg'
-import girl2 from '@/assets/images/girl2.jpg'
-import girl3 from '@/assets/images/girl3.jpg'
+import girl1 from '../assets/images/girl1.jpg'
+import girl2 from '../assets/images/girl2.jpg'
+import girl3 from '../assets/images/girl3.jpg'
 const HomeSlider = () => {
   return (
     <section id="slider">

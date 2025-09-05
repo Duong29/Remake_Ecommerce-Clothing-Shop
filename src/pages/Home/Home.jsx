@@ -1,18 +1,18 @@
-import product1 from "@/assets/images/product1.jpg";
-import product2 from "@/assets/images/product2.jpg";
-import product3 from "@/assets/images/product3.jpg";
-import product4 from "@/assets/images/product4.jpg";
-import product5 from "@/assets/images/product5.jpg";
-import product6 from "@/assets/images/product6.jpg";
-import gallary1 from '@/assets/images/gallery1.jpg'
-import gallary2 from '@/assets/images/gallery2.jpg'
-import gallary3 from '@/assets/images/gallery3.jpg'
-import gallary4 from '@/assets/images/gallery4.jpg'
-import recommend1 from '@/assets/images/recommend1.jpg'
-import recommend2 from '@/assets/images/recommend2.jpg'
-import recommend3 from '@/assets/images/recommend3.jpg'
-import newImg from "@/assets/images/new.png";
-import sale from "@/assets/images/sale.png";
+import product1 from "../../assets/images/product1.jpg";
+import product2 from "../../assets/images/product2.jpg";
+import product3 from "../../assets/images/product3.jpg";
+import product4 from "../../assets/images/product4.jpg";
+import product5 from "../../assets/images/product5.jpg";
+import product6 from "../../assets/images/product6.jpg";
+import gallary1 from "../../assets/images/gallery1.jpg";
+import gallary2 from "../../assets/images/gallery2.jpg";
+import gallary3 from "../../assets/images/gallery3.jpg";
+import gallary4 from "../../assets/images/gallery4.jpg";
+import recommend1 from "../../assets/images/recommend1.jpg";
+import recommend2 from "../../assets/images/recommend2.jpg";
+import recommend3 from "../../assets/images/recommend3.jpg";
+import newImg from "../../assets/images/new.png";
+import sale from "../../assets/images/sale.png";
 const Home = () => {
   return (
     <>
@@ -665,7 +665,6 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            
           </div>
           <a
             className="left recommended-item-control"

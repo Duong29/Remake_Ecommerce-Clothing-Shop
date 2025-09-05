@@ -1,17 +1,17 @@
-import product1 from "@/assets/images/product1.jpg";
-import product2 from "@/assets/images/product2.jpg";
-import product3 from "@/assets/images/product3.jpg";
-import product4 from "@/assets/images/product4.jpg";
-import product5 from "@/assets/images/product5.jpg";
-import product6 from "@/assets/images/product6.jpg";
-import product7 from "@/assets/images/product7.jpg";
-import product8 from "@/assets/images/product8.jpg";
-import product9 from "@/assets/images/product9.jpg";
-import product10 from "@/assets/images/product10.jpg";
-import product11 from "@/assets/images/product11.jpg";
-import product12 from "@/assets/images/product12.jpg";
-import newImg from "@/assets/images/new.png";
-import sale from "@/assets/images/sale.png";
+import product1 from "../../assets/images/product1.jpg";
+import product2 from "../../assets/images/product2.jpg";
+import product3 from "../../assets/images/product3.jpg";
+import product4 from "../../assets/images/product4.jpg";
+import product5 from "../../assets/images/product5.jpg";
+import product6 from "../../assets/images/product6.jpg";
+import product7 from "../../assets/images/product7.jpg";
+import product8 from "../../assets/images/product8.jpg";
+import product9 from "../../assets/images/product9.jpg";
+import product10 from "../../assets/images/product10.jpg";
+import product11 from "../../assets/images/product11.jpg";
+import product12 from "../../assets/images/product12.jpg";
+import newImg from "../../assets/images/new.png";
+import sale from "../../assets/images/sale.png";
 
 const Product = () => {
   return (

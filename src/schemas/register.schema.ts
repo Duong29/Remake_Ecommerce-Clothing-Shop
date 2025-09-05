@@ -1,11 +1,11 @@
-import { literal, z } from "zod";
-
+import { z } from "zod";
 
 export const registerSchema = z.object({
   name: z.string().trim().min(1, { message: "Please enter your name" }),
   email: z
     .string()
     .trim()
+    .toLowerCase()
     .min(1, {
       message: "Please enter your email",
     })
@@ -28,22 +28,18 @@ export const registerSchema = z.object({
     message: "Please enter your address",
   }),
   country: z.string().trim().min(1, { message: "Please enter your country" }),
-  level: z.union([literal(0), literal(1)]),
-  avatar: z
-    .custom<FileList>()
-    .refine((files) => {
-      const file = files?.[0];
-      return !!file;
-    }, "Please add a profile picture")
-    .refine((files) => {
-      const file = files?.[0];
-      const maxSize = 1024 * 1024;
-      return (file?.size ?? 0) <= maxSize;
-    }, "Maximum file size is 1MB")
-    .refine((files) => {
-      const file = files?.[0];
-      return ["image/jpeg", "image/png"].includes(file?.type || "");
-    }, "Only JPG/PNG images are accepted"),
+  avatar: z.custom<File | undefined>().superRefine((file, ctx) => {
+    if (!file) {
+      ctx.addIssue({ code: "custom", message: "Please add a profile picture" });
+      return;
+    }
+    if (file.size > 1024 * 1024) {
+      ctx.addIssue({ code: "custom", message: "Maximum file size is 1MB" });
+    }
+    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      ctx.addIssue({ code: "custom", message: "Only JPG/PNG are accepted" });
+    }
+  }),
 });
 
 export type RegisterSchema = z.infer<typeof registerSchema>;

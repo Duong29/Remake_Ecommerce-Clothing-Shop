@@ -1,38 +1,89 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, RegisterSchema } from "../../schemas/register.schema";
+import {
+  registerSchema,
+  type RegisterSchema,
+} from "../../schemas/register.schema";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useState } from "react";
+import { BASE_API_URL } from "../../lib/api";
 const Register = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileBase64, setFileBase64] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
+    control,
+    watch,
+    reset,
   } = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { level: 0 },
   });
 
-  // Trả về giá trị hiện tại của field avatar
-  // Vì schema là FileList nên cần ép kiểu sang FileList hoặc undefined
-  const avatarList = watch("avatar") as FileList | undefined;
-  // Tạo url cho ảnh
+  const file = watch("avatar");
+  // Convert file to base 64
+  const fileToDataURL = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsDataURL(file);
+    });
+  };
   // Chạy lại useEffect mỗi khi người dùng chọn file mới
   useEffect(() => {
-    const file = avatarList?.[0];
-    if (!file) {
-      setPreviewUrl(null);
+    if (file instanceof File) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+
+      fileToDataURL(file)
+        .then((dataUrl) => setFileBase64(dataUrl))
+        .catch((err) => {
+          console.log("Error converting base64", err);
+          toast("Error when processing file");
+          setFileBase64(null);
+        });
+      return () => URL.revokeObjectURL(url);
+    }
+    setPreviewUrl(null);
+    setFileBase64(null);
+  }, [file]);
+  const obSubmit = async (data: RegisterSchema) => {
+    if (!fileBase64) {
+      toast.error("Please add a profile picture");
       return;
     }
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [avatarList]);
 
-  const obSubmit = (data: RegisterSchema) => {
-    toast("Sign up successful");
+    const payload = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+      address: data.address,
+      country: data.country,
+      level: 0,
+      avatar: fileBase64, // data:image/jpeg;base64,......
+    };
+
+    try {
+      const res = await BASE_API_URL.post("/register", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      console.log(res.data);
+      toast("Registration successful");
+      setPreviewUrl(null);
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+      setFileBase64(null);
+      reset();
+    } catch (error) {
+      console.log(error);
+      toast.error("Registration failed");
+    }
   };
 
   return (
@@ -88,14 +139,29 @@ const Register = () => {
 
             {/* Nút chọn file */}
 
-            <input
-              {...register("avatar")}
-              type="file"
-              accept="image/jpeg, image/png"
+            <Controller
+              name="avatar"
+              control={control}
+              render={({ field: { name, ref, onBlur, onChange } }) => (
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  name={name}
+                  ref={ref}
+                  onBlur={onBlur}
+                  // QUAN TRỌNG: lấy File rồi onChange(File)
+                  onChange={(e) => {
+                    const selectedFile = (e.target as HTMLInputElement)
+                      .files?.[0];
+                    onChange(selectedFile);
+                  }}
+                  className="border rounded px-3 py-2 w-full"
+                />
+              )}
             />
             {errors.avatar?.message && (
               <p style={{ color: "red", fontSize: "13px" }}>
-                {errors.avatar.message}
+                {errors.avatar.message as string}
               </p>
             )}
             {/* Khung preview (UI placeholder, chưa hiển thị ảnh) */}

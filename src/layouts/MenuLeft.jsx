@@ -1,4 +1,4 @@
-import shipping from "@/assets/images/shipping.jpg";
+import shipping from "../assets/images/shipping.jpg";
 import PriceRange from "../components/PriceRange";
 const MenuLeft = () => {
   const handlePriceChange = ({ min, max }) => {

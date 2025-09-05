@@ -1,5 +1,5 @@
 import React from "react";
-import advertiment from "@/assets/images/advertisement.jpg";
+import advertiment from "../assets/images/advertisement.jpg";
 
 const ProductBanner = () => {
   return (
