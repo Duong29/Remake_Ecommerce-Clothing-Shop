@@ -1,6 +1,10 @@
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../slices/authSlice";
 const Header = () => {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
   return (
     <header id="header">
       {/* Header top */}
@@ -129,16 +133,29 @@ const Header = () => {
                       <i className="fa fa-shopping-cart" /> Cart
                     </a>
                   </li>
-                  <li>
-                    <Link to="/login">
-                      <i className="fa fa-lock" /> Login
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/register">
-                      <i className="fa fa-user" /> Register
-                    </Link>
-                  </li>
+                  {!isLoggedIn ? (
+                    <>
+                      <li>
+                        <Link to="/login">
+                          <i className="fa fa-lock" /> Login
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/register">
+                          <i className="fa fa-user" /> Register
+                        </Link>
+                      </li>
+                    </>
+                  ) : (
+                    <li>
+                      <a href="#" onClick={(e) => {
+                        e.preventDefault()
+                        dispatch(logout())
+                      }}>
+                        <i className="fa fa-user" /> Logout
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>
@@ -200,7 +217,7 @@ const Header = () => {
                     </a>
                     <ul role="menu" className="sub-menu">
                       <li>
-                        <a href="blog.html">Blog List</a>
+                        <Link to={'/blog'}>Blog List</Link>
                       </li>
                       <li>
                         <a href="blog-single.html">Blog Single</a>

@@ -11,30 +11,35 @@ const Register = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileBase64, setFileBase64] = useState<string | null>(null);
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    watch,
-    reset,
+    register, // Đăng ký input fields
+    handleSubmit, // Xử lý submit
+    formState: { errors }, // Lỗi validation
+    control, // Điều khiển cho controller
+    watch, // Theo dõi giá trị input
+    reset, // reset form
   } = useForm<RegisterSchema>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema), // Kết nối với Zod schema
   });
 
-  const file = watch("avatar");
-  // Convert file to base 64
+  const file = watch("avatar"); // Theo dõi file được chọn
+  // Hàm convert file sang base64
   const fileToDataURL = (file: File) => {
     return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
+      const reader = new FileReader(); // Công cụ của trình duyệt để đọc file
+      //Đọc file thành công và trả về result và ép kiểu sang string
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = () => reject(new Error("Failed to read file"));
+      // Đọc file dưới dạng base64
       reader.readAsDataURL(file);
     });
   };
   // Chạy lại useEffect mỗi khi người dùng chọn file mới
   useEffect(() => {
+    // Kiểm tra file có phải là 1 object kiểu File hay không?
     if (file instanceof File) {
+      // Nếu đúng thì tạo ra 1 url tạm thay thế file ảnh
       const url = URL.createObjectURL(file);
+      // Cập nhật setPreviewUrl bằng url tạm
       setPreviewUrl(url);
 
       fileToDataURL(file)
@@ -49,7 +54,7 @@ const Register = () => {
     setPreviewUrl(null);
     setFileBase64(null);
   }, [file]);
-  const obSubmit = async (data: RegisterSchema) => {
+  const onSubmit = async (data: RegisterSchema) => {
     if (!fileBase64) {
       toast.error("Please add a profile picture");
       return;
@@ -91,7 +96,7 @@ const Register = () => {
       <ToastContainer />
       <div className="signup-form" style={{ width: "500px" }}>
         <h2>New user signup!</h2>
-        <form onSubmit={handleSubmit(obSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <input {...register("name")} placeholder="Name" />
           {errors.name?.message && (
             <p style={{ color: "red", fontSize: "13px" }}>

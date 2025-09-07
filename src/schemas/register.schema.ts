@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+const MAX_SIZE = 1024 * 1024
 export const registerSchema = z.object({
   name: z.string().trim().min(1, { message: "Please enter your name" }),
   email: z
@@ -28,15 +29,17 @@ export const registerSchema = z.object({
     message: "Please enter your address",
   }),
   country: z.string().trim().min(1, { message: "Please enter your country" }),
-  avatar: z.custom<File | undefined>().superRefine((file, ctx) => {
+  avatar: z
+  .instanceof(File)
+  .superRefine((file, ctx) => {
     if (!file) {
       ctx.addIssue({ code: "custom", message: "Please add a profile picture" });
-      return;
+      return; // return để không check phía dưới vì nếu không có file thì không thể đọc file.type hoặc file.size
     }
-    if (file.size > 1024 * 1024) {
+    if (file.size > MAX_SIZE) {
       ctx.addIssue({ code: "custom", message: "Maximum file size is 1MB" });
     }
-    if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+    if (!["image/jpeg", "image/png"].includes(file.type)) { 
       ctx.addIssue({ code: "custom", message: "Only JPG/PNG are accepted" });
     }
   }),

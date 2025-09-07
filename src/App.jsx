@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
 import MenuLeft from "./layouts/MenuLeft";
@@ -10,6 +11,7 @@ function App() {
   const isProducts = pathname === "products";
   return (
     <>
+      <ToastContainer />
       <Header />
       {isProducts && <ProductBanner />}
       {isHome && <HomeSlider />}
