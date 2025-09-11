@@ -5,10 +5,12 @@ import Footer from "./layouts/Footer";
 import MenuLeft from "./layouts/MenuLeft";
 import HomeSlider from "./components/HomeSlider";
 import ProductBanner from "./components/ProductBanner";
+
 function App() {
   const { pathname } = useLocation();
   const isHome = pathname === "/";
   const isProducts = pathname === "products";
+
   return (
     <>
       <ToastContainer />

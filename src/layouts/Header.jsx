@@ -2,9 +2,16 @@ import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
+import { toast } from "react-toastify";
+
 const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(logout());
+    toast.success("You have been logged out");
+  };
   return (
     <header id="header">
       {/* Header top */}
@@ -148,10 +155,7 @@ const Header = () => {
                     </>
                   ) : (
                     <li>
-                      <a href="#" onClick={(e) => {
-                        e.preventDefault()
-                        dispatch(logout())
-                      }}>
+                      <a href="#" onClick={handleLogout}>
                         <i className="fa fa-user" /> Logout
                       </a>
                     </li>
@@ -217,7 +221,7 @@ const Header = () => {
                     </a>
                     <ul role="menu" className="sub-menu">
                       <li>
-                        <Link to={'/blog'}>Blog List</Link>
+                        <Link to={"/blog"}>Blog List</Link>
                       </li>
                       <li>
                         <a href="blog-single.html">Blog Single</a>

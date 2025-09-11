@@ -9,7 +9,7 @@ import Home from "./pages/Home/Home.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Register from "./pages/Register/Register.tsx";
 import { BlogList } from "./pages/Blog/BlogList.jsx";
-
+import BlogDetail from './pages/Blog/BlogDetail.jsx'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,7 +19,8 @@ const router = createBrowserRouter([
       { path: "products", Component: Product },
       { path: "login", Component: Login },
       { path: "register", Component: Register },
-      {path: 'blog', Component: BlogList}
+      {path: 'blog', Component: BlogList},
+      {path: 'blog/detail/:id', Component: BlogDetail}
     ],
   },
 ]);

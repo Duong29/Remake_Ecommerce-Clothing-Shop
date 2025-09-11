@@ -6,9 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../slices/authSlice";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store";
-import { useEffect } from "react";
+import type { User } from "../../slices/authSlice";
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,17 +19,19 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginSchema) => {
+    const payload = {
+      email: data.email,
+      password: data.password,
+      level: 0,
+    };
     try {
-      const payload = {
-        email: data.email,
-        password: data.password,
-        level: 0,
-      };
       const res = await BASE_API_URL.post("/login", payload);
-      const resData = res.data;
-      if (resData?.token) {
-        dispatch(loginSuccess(resData.token));
-        toast("Login successful");
+      console.log(res);
+      if (res.data?.token && res.data?.Auth) {
+        const token: string = res.data.token;
+        const user: User = res.data.Auth;
+        dispatch(loginSuccess({ token, user }));
+        toast.success("Login successful");
         navigate("/");
       } else {
         toast.error("Password or email are not correctly. Please try again.");
@@ -44,15 +44,10 @@ export default function Login() {
       console.error("Login error:", error);
     }
   };
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-
-  useEffect(() => {
-    console.log("isLoggedIn:", isLoggedIn);
-  }, [isLoggedIn]);
 
   return (
     <div className="row justify-content-center align-items-start">
-      <div className="login-form" style={{ width: "500px" }}>
+      <div className="login-form" style={{ width: "400px" }}>
         <h2>Login to your account</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
@@ -78,7 +73,7 @@ export default function Login() {
             </p>
           )}
           <button type="submit" className="btn btn-warning w-100">
-            Signup
+            Login
           </button>
         </form>
       </div>

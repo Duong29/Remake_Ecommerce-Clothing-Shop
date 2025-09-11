@@ -1,11 +1,10 @@
-import React from "react";
-import advertiment from "../assets/images/advertisement.jpg";
+import advertisement from "../assets/images/advertisement.jpg";
 
 const ProductBanner = () => {
   return (
     <section id="advertisement">
       <div className="container">
-        <img src={advertiment} alt="" />
+        <img src={advertisement} alt="" />
       </div>
     </section>
   );

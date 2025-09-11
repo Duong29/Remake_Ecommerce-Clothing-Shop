@@ -1,121 +1,83 @@
-import blogOne from '../../assets/images/blog-one.jpg'
-import blogTwo from '../../assets/images/blog-two.jpg'
-import blogThree from '../../assets/images/blog-three.jpg'
+import { BASE_API_URL, URL_BLOG_IMAGE } from "../../lib/api";
+import { useEffect, useState } from "react";
+import { Link } from "react-router";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 export const BlogList = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    BASE_API_URL.get("/blog")
+      .then((res) => {
+        setBlogs(res.data.blog.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log("Error fetching data:", err);
+      });
+  }, []);
+  console.log("blog:", blogs);
   return (
     <div className="blog-post-area">
       <h2 className="title text-center">Latest From our Blog</h2>
-      <div className="single-blog-post">
-        <h3>Girls Pink T Shirt arrived in store</h3>
-        <div className="post-meta">
-          <ul>
-            <li>
-              <i className="fa fa-user" /> Mac Doe
-            </li>
-            <li>
-              <i className="fa fa-clock-o" /> 1:33 pm
-            </li>
-            <li>
-              <i className="fa fa-calendar" /> DEC 5, 2013
-            </li>
-          </ul>
-          <span>
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star-half-o" />
-          </span>
-        </div>
-        <a href="">
-          <img src={blogOne} alt="" />
-        </a>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
-        </p>
-        <a className="btn btn-primary" href="">
-          Read More
-        </a>
-      </div>
-      <div className="single-blog-post">
-        <h3>Girls Pink T Shirt arrived in store</h3>
-        <div className="post-meta">
-          <ul>
-            <li>
-              <i className="fa fa-user" /> Mac Doe
-            </li>
-            <li>
-              <i className="fa fa-clock-o" /> 1:33 pm
-            </li>
-            <li>
-              <i className="fa fa-calendar" /> DEC 5, 2013
-            </li>
-          </ul>
-          <span>
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star-half-o" />
-          </span>
-        </div>
-        <a href="">
-          <img src={blogTwo} alt="" />
-        </a>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
-        </p>
-        <a className="btn btn-primary" href="">
-          Read More
-        </a>
-      </div>
-      <div className="single-blog-post">
-        <h3>Girls Pink T Shirt arrived in store</h3>
-        <div className="post-meta">
-          <ul>
-            <li>
-              <i className="fa fa-user" /> Mac Doe
-            </li>
-            <li>
-              <i className="fa fa-clock-o" /> 1:33 pm
-            </li>
-            <li>
-              <i className="fa fa-calendar" /> DEC 5, 2013
-            </li>
-          </ul>
-          <span>
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star" />
-            <i className="fa fa-star-half-o" />
-          </span>
-        </div>
-        <a href="">
-          <img src={blogThree} alt="" />
-        </a>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
-        </p>
-        <a className="btn btn-primary" href="">
-          Read More
-        </a>
-      </div>
+      {loading
+        ? Array(3)
+            .fill(0)
+            .map((_, idx) => (
+              <div
+                key={idx}
+                className="single-blog-post"
+                style={{ marginBottom: 20 }}
+              >
+                <h3>
+                  <Skeleton width="70%" height={30} />
+                </h3>
+                <Skeleton width={200} height={30} />
+                <div className="post-meta">
+                  <Skeleton width={150} height={20} />
+                </div>
+                <Skeleton
+                  height={200}
+                  width="100%"
+                  style={{ marginBottom: 10 }}
+                />
+                <Skeleton count={2} />
+                <Skeleton width={100} height={30} style={{ marginTop: 10 }} />
+              </div>
+            ))
+        : blogs.map((blog) => (
+            <div key={blog.id} className="single-blog-post">
+              <h3>{blog.title}</h3>
+              <div className="post-meta">
+                <ul>
+                  <li>
+                    <i className="fa fa-user" /> Mac Doe
+                  </li>
+                  <li>
+                    <i className="fa fa-clock-o" /> 1:33 pm
+                  </li>
+                  <li>
+                    <i className="fa fa-calendar" /> DEC 5, 2013
+                  </li>
+                </ul>
+                <span>
+                  <i className="fa fa-star" />
+                  <i className="fa fa-star" />
+                  <i className="fa fa-star" />
+                  <i className="fa fa-star" />
+                  <i className="fa fa-star-half-o" />
+                </span>
+              </div>
+              <a href="">
+                <img src={`${URL_BLOG_IMAGE}/${blog.image}`} alt="" />
+              </a>
+              <p>{blog.description}</p>
+              <Link to={`/blog/detail/${blog.id}`} className="btn btn-primary">
+                Read More
+              </Link>
+            </div>
+          ))}
+
       <div className="pagination-area">
         <ul className="pagination">
           <li>
