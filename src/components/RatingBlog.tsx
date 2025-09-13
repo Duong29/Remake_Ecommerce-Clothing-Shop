@@ -1,6 +1,5 @@
 import "@smastrom/react-rating/style.css";
 import { Rating, ThinStar } from "@smastrom/react-rating";
-import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { RootState } from "../store";
@@ -11,14 +10,14 @@ const includedShapesStyles = [ThinStar].map((itemShapes) => ({
   activeFillColor: "#f59e0b",
   inactiveFillColor: "#ffedd5",
 }));
-export const RatingBlog = ({ blogId }) => {
-  const [rating, setRating] = useState(0);
+export const RatingBlog = ({ blogId, rating}: {blogId: number;rating: number;}) => {
+  console.log(rating);
   const { isLoggedIn, token, user } = useSelector((s: RootState) => s.auth);
   const { ratedBlogs } = useSelector((s: RootState) => s.rating);
   const dispatch = useDispatch();
 
-  
-  
+  const roundedUp = Math.ceil(rating);
+  console.log(roundedUp);
   const handleRating = async (newRating: number) => {
     if (!isLoggedIn || !user) {
       toast.error("Please login before rating");
@@ -32,8 +31,6 @@ export const RatingBlog = ({ blogId }) => {
       toast.error("Bạn đã đánh giá blog này rồi!");
       return;
     }
-
-    setRating(newRating);
 
     const payload = {
       user_id: Number(user.id),
@@ -68,15 +65,17 @@ export const RatingBlog = ({ blogId }) => {
           style={{ display: "flex", alignItems: "center", gap: "10px" }}
         >
           <li className="rate-this">Rate this item:</li>
-          {includedShapesStyles.map((itemStyles, index) => (
-            <Rating
-              style={{ maxWidth: 130 }}
-              key={`shape_${index}`}
-              value={rating}
-              onChange={handleRating}
-              itemStyles={itemStyles}
-            />
-          ))}
+          <Rating
+            style={{ maxWidth: 130 }}
+            value={roundedUp}
+            items={5}
+            onChange={handleRating}
+            itemStyles={{
+              itemShapes: ThinStar,
+              activeFillColor: "#f59e0b",
+              inactiveFillColor: "#ffedd5",
+            }}
+          />
         </ul>
         <ul className="tag">
           <li>TAG:</li>

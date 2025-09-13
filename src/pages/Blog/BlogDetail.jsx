@@ -9,6 +9,7 @@ const BlogDetail = () => {
   let params = useParams();
   const [blogDetails, setBlogDetails] = useState([]);
   const [comments, setComments] = useState([]);
+  const [rating, setRating] = useState(0);
   useEffect(() => {
     if (!params.id) return;
     BASE_API_URL.get(`/blog/detail/${params.id}`)
@@ -21,6 +22,21 @@ const BlogDetail = () => {
       });
   }, [params.id]);
   console.log(comments);
+  useEffect(() => {
+    BASE_API_URL.get(`/blog/rate/${params.id}`)
+      .then((res) => {
+        let items = res.data.data;
+        if (!Array.isArray(items)) {
+          items = Object.values(items);
+        }
+        const total = items.reduce((acc, item) => acc + item.rate, 0);
+        const averageRating = total / items.length
+        setRating(averageRating)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [params.id]);
   return (
     <>
       <div className="blog-post-area">
@@ -64,7 +80,7 @@ const BlogDetail = () => {
           </div>
         </div>
       </div>
-      <RatingBlog blogId={params.id} />
+      <RatingBlog blogId={params.id} rating={rating}/>
       <ListComment />
       <div className="socials-share">
         <a href="">
