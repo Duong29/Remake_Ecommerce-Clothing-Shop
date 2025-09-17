@@ -6,37 +6,42 @@ import { ListComment } from "../../components/ListComment";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 const BlogDetail = () => {
-  let params = useParams();
+  const { id } = useParams();
   const [blogDetails, setBlogDetails] = useState([]);
   const [comments, setComments] = useState([]);
   const [rating, setRating] = useState(0);
+  const handleAddComment = (newComment) => {
+    setComments((prev) => [newComment, ...prev]);
+  };
   useEffect(() => {
-    if (!params.id) return;
-    BASE_API_URL.get(`/blog/detail/${params.id}`)
-      .then((res) => {
+    if (!id) return;
+    const fetchComments = async () => {
+      try {
+        const res = await BASE_API_URL.get(`/blog/detail/${id}`);
         setBlogDetails(res.data.data);
         setComments(res.data.data.comment);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [params.id]);
-  console.log(comments);
+      } catch (error) {
+        console.error("Error fetching blog detail:", error);
+      }
+    };
+    fetchComments();
+  }, [id]);
+
   useEffect(() => {
-    BASE_API_URL.get(`/blog/rate/${params.id}`)
+    BASE_API_URL.get(`/blog/rate/${id}`)
       .then((res) => {
         let items = res.data.data;
         if (!Array.isArray(items)) {
           items = Object.values(items);
         }
         const total = items.reduce((acc, item) => acc + item.rate, 0);
-        const averageRating = total / items.length
-        setRating(averageRating)
+        const averageRating = total / items.length;
+        setRating(averageRating);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [params.id]);
+  }, [id]);
   return (
     <>
       <div className="blog-post-area">
@@ -80,14 +85,14 @@ const BlogDetail = () => {
           </div>
         </div>
       </div>
-      <RatingBlog blogId={params.id} rating={rating}/>
-      <ListComment />
+      <RatingBlog blogId={id} rating={rating} />
+      <ListComment comments={comments} />
       <div className="socials-share">
         <a href="">
           <img src={social} alt="" />
         </a>
       </div>
-      <Comment />
+      <Comment blogId={id} onCommentSuccess={handleAddComment} />
     </>
   );
 };

@@ -1,16 +1,34 @@
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
-  const handleLogout = (e) => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickLogout = (e) => {
     e.preventDefault();
+    setOpen(true);
+  };
+
+  const handleLogout = () => {
     dispatch(logout());
     toast.success("You have been logged out");
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
   return (
     <header id="header">
@@ -155,9 +173,45 @@ const Header = () => {
                     </>
                   ) : (
                     <li>
-                      <a href="#" onClick={handleLogout}>
+                      <a href="#" onClick={handleClickLogout}>
                         <i className="fa fa-user" /> Logout
                       </a>
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle
+                          sx={{ fontSize: "20px" }}
+                          id="alert-dialog-title"
+                        >
+                          {"Confirm Logout?"}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText
+                            sx={{ fontSize: "15px" }}
+                            id="alert-dialog-description"
+                          >
+                            Are you sure you want to log out of your account?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            sx={{ fontSize: "15px" }}
+                            onClick={handleClose}
+                          >
+                            Disagree
+                          </Button>
+                          <Button
+                            sx={{ fontSize: "15px" }}
+                            onClick={handleLogout}
+                            autoFocus
+                          >
+                            Agree
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                     </li>
                   )}
                 </ul>

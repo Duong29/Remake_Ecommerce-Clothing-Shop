@@ -5,19 +5,13 @@ import { toast } from "react-toastify";
 import { RootState } from "../store";
 import { setBlogRating } from "../slices/ratingSlice";
 import { BASE_API_URL } from "../lib/api";
-const includedShapesStyles = [ThinStar].map((itemShapes) => ({
-  itemShapes,
-  activeFillColor: "#f59e0b",
-  inactiveFillColor: "#ffedd5",
-}));
+
 export const RatingBlog = ({ blogId, rating}: {blogId: number;rating: number;}) => {
-  console.log(rating);
   const { isLoggedIn, token, user } = useSelector((s: RootState) => s.auth);
   const { ratedBlogs } = useSelector((s: RootState) => s.rating);
   const dispatch = useDispatch();
 
   const roundedUp = Math.ceil(rating);
-  console.log(roundedUp);
   const handleRating = async (newRating: number) => {
     if (!isLoggedIn || !user) {
       toast.error("Please login before rating");

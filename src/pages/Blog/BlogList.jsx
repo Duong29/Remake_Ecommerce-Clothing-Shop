@@ -16,7 +16,6 @@ export const BlogList = () => {
         console.log("Error fetching data:", err);
       });
   }, []);
-  console.log("blog:", blogs);
   return (
     <div className="blog-post-area">
       <h2 className="title text-center">Latest From our Blog</h2>
@@ -29,15 +28,8 @@ export const BlogList = () => {
                 className="single-blog-post"
                 style={{ marginBottom: 20 }}
               >
-                <h3>
-                  <Skeleton width="70%" height={30} />
-                </h3>
-                <Skeleton width={200} height={30} />
-                <div className="post-meta">
-                  <Skeleton width={150} height={20} />
-                </div>
                 <Skeleton
-                  height={200}
+                  height={400}
                   width="100%"
                   style={{ marginBottom: 10 }}
                 />

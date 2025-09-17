@@ -37,10 +37,6 @@ export default function Login() {
         toast.error("Password or email are not correctly. Please try again.");
       }
     } catch (error) {
-      // Nếu API trả về lỗi từ server (400, 401, 500,...)
-      const errorMessage =
-        error?.response?.data?.message || "Something went wrong";
-      toast.error(errorMessage);
       console.error("Login error:", error);
     }
   };
